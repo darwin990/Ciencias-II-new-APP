@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ConfigurationDialog extends JDialog {
+public class ConfigurationDialog extends ThemedDialog {
 
     private JTextField txtRecordCount;
     private JTextField txtBlockSizeBytes;
@@ -30,7 +30,7 @@ public class ConfigurationDialog extends JDialog {
         setupListeners();
         updatePreview();
 
-        setSize(550, 650);
+        setSize(960, 680);
         setLocationRelativeTo(parent);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
@@ -60,8 +60,8 @@ public class ConfigurationDialog extends JDialog {
     }
 
     private void setupLayout() {
-        setLayout(new BorderLayout(15, 15));
-        getContentPane().setBackground(new Color(240, 248, 255));
+        setLayout(new BorderLayout(0, 0));
+        getContentPane().setBackground(Color.WHITE);
 
         // Title panel
         JPanel titlePanel = new JPanel();
@@ -84,33 +84,35 @@ public class ConfigurationDialog extends JDialog {
 
         add(titlePanel, BorderLayout.NORTH);
 
-        // Main panel
-        JPanel mainPanel = new JPanel(new BorderLayout(15, 15));
+        // Main panel: vista previa (izquierda) y configuración (derecha)
+        JPanel mainPanel = new JPanel(new BorderLayout(16, 16));
         mainPanel.setBackground(new Color(240, 248, 255));
-        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+        mainPanel.setBorder(new EmptyBorder(16, 18, 12, 18));
 
-        // Configuration panel
         JPanel configPanel = createConfigurationPanel();
-
-        // Preview panel
         JPanel previewPanel = createPreviewPanel();
-
-        // Preset panel
         JPanel presetPanel = createPresetPanel();
 
-        mainPanel.add(configPanel, BorderLayout.NORTH);
-        mainPanel.add(previewPanel, BorderLayout.CENTER);
-        mainPanel.add(presetPanel, BorderLayout.SOUTH);
-
-        add(mainPanel, BorderLayout.CENTER);
-
-        // Button panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setBackground(new Color(240, 248, 255));
         buttonPanel.add(btnCancel);
         buttonPanel.add(btnAccept);
 
-        add(buttonPanel, BorderLayout.SOUTH);
+        JPanel derecha = new JPanel(new BorderLayout(0, 12));
+        derecha.setBackground(new Color(240, 248, 255));
+        derecha.setPreferredSize(new Dimension(580, 0));
+        derecha.add(configPanel, BorderLayout.NORTH);
+
+        JPanel surPanel = new JPanel(new BorderLayout(0, 12));
+        surPanel.setBackground(new Color(240, 248, 255));
+        surPanel.add(presetPanel, BorderLayout.NORTH);
+        surPanel.add(buttonPanel, BorderLayout.SOUTH);
+        derecha.add(surPanel, BorderLayout.CENTER);
+
+        mainPanel.add(previewPanel, BorderLayout.CENTER);
+        mainPanel.add(derecha, BorderLayout.EAST);
+
+        add(mainPanel, BorderLayout.CENTER);
     }
 
     private JPanel createConfigurationPanel() {

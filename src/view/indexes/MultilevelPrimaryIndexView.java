@@ -1,5 +1,8 @@
 package view.indexes;
 
+import view.Theme;
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -7,7 +10,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class MultilevelPrimaryIndexView extends JFrame {
+public class MultilevelPrimaryIndexView extends ThemedFrame {
 
     private JButton btnSearch;
     private JButton btnConfigure;
@@ -170,7 +173,7 @@ public class MultilevelPrimaryIndexView extends JFrame {
 
         // Control panel on the right side
         JPanel controlPanel = createControlPanel();
-        centerPanel.add(controlPanel, BorderLayout.EAST);
+        centerPanel.add(Theme.envolverControles(controlPanel), BorderLayout.EAST);
 
         add(centerPanel, BorderLayout.CENTER);
     }
@@ -470,7 +473,7 @@ public class MultilevelPrimaryIndexView extends JFrame {
         bottomPanel.setBackground(new Color(220, 220, 220));
         bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JLabel lblInfo = new JLabel("© 2025 - Simulación Avanzada de Índices Multinivel Primarios - Grupo 1");
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblInfo.setForeground(new Color(100, 100, 100));
 

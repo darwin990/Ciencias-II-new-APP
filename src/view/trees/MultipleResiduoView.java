@@ -1,5 +1,7 @@
 package view.trees;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -8,7 +10,7 @@ import java.awt.event.ActionListener;
 /**
  * Vista específica para residuo múltiple.
  */
-public class MultipleResiduoView extends JFrame {
+public class MultipleResiduoView extends ThemedFrame {
 
     public interface TreeVisualizer {
         void paintTreeVisualization(Graphics2D g2d, int width, int height);

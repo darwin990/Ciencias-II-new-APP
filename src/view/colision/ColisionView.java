@@ -1,11 +1,13 @@
 package view.colision;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class ColisionView extends JFrame {
+public class ColisionView extends ThemedFrame {
 
     private JButton btnSequentialSolution;
     private JButton btnExponentialSolution;
@@ -76,7 +78,7 @@ public class ColisionView extends JFrame {
         bottomPanel.setBackground(new Color(220, 220, 220));
         bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JLabel lblInfo = new JLabel("© 2025 - Search Algorithms v1.0 Group 1");
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblInfo.setForeground(new Color(100, 100, 100));
 

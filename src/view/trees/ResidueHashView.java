@@ -1,5 +1,7 @@
 package view.trees;
 
+import view.ThemedFrame;
+
 import model.trees.ResidueHashModel.HashEntry;
 
 import javax.swing.*;
@@ -15,7 +17,7 @@ import java.util.LinkedList;
  * Vista mejorada para el árbol de residuo simple.
  * Incluye una tabla para mostrar el hash y un panel para visualizar el árbol.
  */
-public class ResidueHashView extends JFrame {
+public class ResidueHashView extends ThemedFrame {
 
     private final JButton btnInsert;
     private final JButton btnSearch;
@@ -294,7 +296,7 @@ public class ResidueHashView extends JFrame {
         // Panel de pie de página
         JPanel footerPanel = new JPanel();
         footerPanel.setBackground(new Color(220, 220, 220));
-        JLabel lblFooter = new JLabel("© 2025 - Algoritmos de Dispersión v1.0");
+        JLabel lblFooter = new JLabel(view.Theme.CREDITOS);
         lblFooter.setFont(new Font("Arial", Font.PLAIN, 10));
         lblFooter.setForeground(new Color(100, 100, 100));
         footerPanel.add(lblFooter);

@@ -1,11 +1,13 @@
 package view.external_search;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class ExternalColisionView extends JFrame {
+public class ExternalColisionView extends ThemedFrame {
 
     private JButton btnSequentialSolution;
     private JButton btnExponentialSolution;

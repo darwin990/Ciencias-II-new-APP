@@ -1,13 +1,30 @@
 package view.internal_search;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.plaf.basic.BasicButtonUI;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class SequentialSearchView extends JFrame {
+/**
+ * Vista del algoritmo de Búsqueda Secuencial.
+ *
+ * Estructura responsive:
+ *  - NORTH : cabecera (azul oscuro).
+ *  - CENTER: panel dividido con BorderLayout -> tabla (CENTER) y controles (EAST).
+ *  - SOUTH : pie de página (rojo teja).
+ *
+ * La tabla se expande con la ventana mientras el panel de controles conserva
+ * su ancho preferido y sus componentes alineados (GridBagLayout).
+ */
+public class SequentialSearchView extends ThemedFrame {
 
     private JButton btnSearch;
     private JButton btnGenerateArray;
@@ -28,311 +45,397 @@ public class SequentialSearchView extends JFrame {
     private int currentSearchIndex = -1;
     private int foundIndex = -1;
 
-    // Paleta de colores personalizada
-    private static final Color DARK_NAVY = new Color(0, 1, 13);      // #0001DD
-    private static final Color WARM_BROWN = new Color(115, 73, 22);   // #734916
-    private static final Color LIGHT_BROWN = new Color(166, 133, 93); // #A6855D
-    private static final Color CREAM = new Color(242, 202, 153);      // #F2CA99
-    private static final Color VERY_DARK = new Color(13, 13, 13);     // #0D0D0D
-    private static final Color SOFT_WHITE = new Color(248, 248, 248); // Blanco suave para contraste
+    // ===================== Paleta de colores =====================
+    private static final Color NAVY_HEADER = new Color(0x1A, 0x36, 0x5D); // Azul oscuro
+    private static final Color MUSTARD = new Color(0xC5, 0x96, 0x1A);    // Mostaza / amarillo oscuro
+    private static final Color BRICK_RED = new Color(0xB8, 0x3A, 0x2A);  // Rojo teja
+    private static final Color DARK_GRAY = new Color(0x2F, 0x2F, 0x2F);  // Gris oscuro / negro
+    private static final Color WHITE = Color.WHITE;
+    private static final Color TEXT_DARK = new Color(0x22, 0x22, 0x22);
+    private static final Color SUBTITLE = new Color(0xC9, 0xD6, 0xE8);
+    private static final Color ROW_SEARCH = new Color(0xFF, 0xE0, 0xB2); // Ámbar claro (búsqueda actual)
+    private static final Color ROW_FOUND = new Color(0xC8, 0xE6, 0xC9);  // Verde claro (encontrado)
+
+    // ===================== Tipografías =====================
+    private static final Font FONT_TITLE = new Font("Segoe UI", Font.BOLD, 24);
+    private static final Font FONT_SUBTITLE = new Font("Segoe UI", Font.ITALIC, 13);
+    private static final Font FONT_LABEL = new Font("Segoe UI", Font.BOLD, 12);
+    private static final Font FONT_BUTTON = new Font("Segoe UI", Font.BOLD, 12);
+    private static final Font FONT_FIELD = new Font("Segoe UI", Font.PLAIN, 13);
+    private static final Font FONT_TABLE = new Font("Segoe UI", Font.PLAIN, 13);
+    private static final Font FONT_TABLE_HEADER = new Font("Segoe UI", Font.BOLD, 13);
+
+    // Dimensiones fijas para que el panel derecho no se deforme
+    private static final int CONTROLS_WIDTH = 500;
+    private static final int BUTTON_WIDTH = 135;
+    private static final int BUTTON_HEIGHT = 34;
 
     public SequentialSearchView() {
-        // Basic window configuration
         setTitle("Búsqueda Secuencial");
-        setSize(600, 1000);
-        setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout(15, 15));
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(WHITE);
+        setMinimumSize(new Dimension(1080, 640));
+        setSize(1400, 820);
+        setLocationRelativeTo(null);
 
-        // Set background color using cream tone
-        getContentPane().setBackground(CREAM);
+        add(createHeaderPanel(), BorderLayout.NORTH);
+        add(createMainPanel(), BorderLayout.CENTER);
+        add(createFooterPanel(), BorderLayout.SOUTH);
+    }
 
-        // Top panel with title and subtitle
-        JPanel titlePanel = new JPanel();
-        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
-        titlePanel.setBackground(DARK_NAVY);
-        titlePanel.setBorder(new EmptyBorder(20, 20, 20, 20));
+    // ===================== Cabecera =====================
+    private JPanel createHeaderPanel() {
+        JPanel header = new JPanel();
+        header.setLayout(new BoxLayout(header, BoxLayout.Y_AXIS));
+        header.setBackground(NAVY_HEADER);
+        header.setBorder(new EmptyBorder(18, 20, 18, 20));
 
         JLabel lblTitle = new JLabel("Algoritmo de Búsqueda Secuencial");
-        lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        lblTitle.setForeground(SOFT_WHITE);
+        lblTitle.setFont(FONT_TITLE);
+        lblTitle.setForeground(WHITE);
         lblTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel lblSubtitle = new JLabel("Visualización y prueba del algoritmo");
-        lblSubtitle.setFont(new Font("Segoe UI", Font.ITALIC, 14));
-        lblSubtitle.setForeground(CREAM);
+        lblSubtitle.setFont(FONT_SUBTITLE);
+        lblSubtitle.setForeground(SUBTITLE);
         lblSubtitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        titlePanel.add(lblTitle);
-        titlePanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        titlePanel.add(lblSubtitle);
+        header.add(lblTitle);
+        header.add(Box.createRigidArea(new Dimension(0, 6)));
+        header.add(lblSubtitle);
 
-        add(titlePanel, BorderLayout.NORTH);
+        return header;
+    }
 
-        // Center panel with table and search components
-        JPanel centerPanel = new JPanel(new BorderLayout(10, 10));
-        centerPanel.setBackground(CREAM);
-        centerPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
+    // ===================== Cuerpo: tabla + controles =====================
+    private JPanel createMainPanel() {
+        JPanel main = new JPanel(new BorderLayout(18, 0));
+        main.setBackground(WHITE);
+        main.setBorder(new EmptyBorder(16, 18, 16, 18));
 
-        // Table panel
+        // El panel central (tabla) crece; el panel EAST conserva su ancho.
+        main.add(createTablePanel(), BorderLayout.CENTER);
+        main.add(createControlsPanel(), BorderLayout.EAST);
+
+        return main;
+    }
+
+    private JPanel createTablePanel() {
         JPanel tablePanel = new JPanel(new BorderLayout());
-        tablePanel.setBackground(CREAM);
+        tablePanel.setBackground(WHITE);
 
-        // Create table model with two columns: position and value
         tableModel = new DefaultTableModel(new Object[]{"Posición", "Clave"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make table non-editable
+                return false;
             }
         };
 
         dataTable = new JTable(tableModel);
-        dataTable.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        dataTable.setRowHeight(25);
-        dataTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-        dataTable.getTableHeader().setBackground(WARM_BROWN);
-        dataTable.getTableHeader().setForeground(SOFT_WHITE);
+        dataTable.setFont(FONT_TABLE);
+        dataTable.setForeground(TEXT_DARK);
+        dataTable.setBackground(WHITE);
+        dataTable.setRowHeight(27);
+        dataTable.setShowGrid(true);
+        dataTable.setGridColor(Color.BLACK);
+        dataTable.setIntercellSpacing(new Dimension(1, 1));
+        dataTable.setFillsViewportHeight(true);
+        dataTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        dataTable.setSelectionBackground(new Color(0xBB, 0xDE, 0xFB));
 
-        // Custom cell renderer for highlighting
-        dataTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        // Encabezado mostaza con texto blanco y líneas negras
+        JTableHeader header = dataTable.getTableHeader();
+        header.setReorderingAllowed(false);
+        header.setPreferredSize(new Dimension(0, 32));
+        header.setDefaultRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value,
-                                                           boolean isSelected, boolean hasFocus, int row, int column) {
-                Component c = super.getTableCellRendererComponent(table, value,
-                        isSelected, hasFocus, row, column);
-
-                if (row == currentSearchIndex && currentSearchIndex != -1) {
-                    // Cream más intenso para búsqueda actual
-                    c.setBackground(new Color(255, 218, 185));
-                    c.setForeground(VERY_DARK);
-                } else if (row == foundIndex && foundIndex != -1) {
-                    // Verde suave para elemento encontrado
-                    c.setBackground(new Color(144, 238, 144));
-                    c.setForeground(VERY_DARK);
-                } else {
-                    c.setBackground(SOFT_WHITE);
-                    c.setForeground(VERY_DARK);
-                }
-
-                return c;
+                                                           boolean isSelected, boolean hasFocus,
+                                                           int row, int column) {
+                JLabel label = (JLabel) super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+                label.setOpaque(true);
+                label.setBackground(MUSTARD);
+                label.setForeground(WHITE);
+                label.setFont(FONT_TABLE_HEADER);
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                label.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                return label;
             }
         });
 
+        // Renderer para resaltar la búsqueda y el elemento encontrado
+        dataTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                                                           boolean isSelected, boolean hasFocus,
+                                                           int row, int column) {
+                JLabel label = (JLabel) super.getTableCellRendererComponent(
+                        table, value, isSelected, hasFocus, row, column);
+
+                if (row == foundIndex && foundIndex != -1) {
+                    label.setBackground(ROW_FOUND);
+                } else if (row == currentSearchIndex && currentSearchIndex != -1) {
+                    label.setBackground(ROW_SEARCH);
+                } else {
+                    label.setBackground(WHITE);
+                }
+
+                label.setForeground(TEXT_DARK);
+                label.setOpaque(true);
+                label.setBorder(new EmptyBorder(0, 8, 0, 8));
+                return label;
+            }
+        });
+
+        // Anchos iniciales proporcionales; el layout se encarga del resto
+        dataTable.getColumnModel().getColumn(0).setPreferredWidth(320);
+        dataTable.getColumnModel().getColumn(1).setPreferredWidth(480);
+
         JScrollPane scrollPane = new JScrollPane(dataTable);
-        scrollPane.setBorder(BorderFactory.createLineBorder(WARM_BROWN, 2));
+        scrollPane.setBorder(BorderFactory.createLineBorder(MUSTARD, 2));
+        scrollPane.getViewport().setBackground(WHITE);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
         tablePanel.add(scrollPane, BorderLayout.CENTER);
-        centerPanel.add(tablePanel, BorderLayout.CENTER);
+        return tablePanel;
+    }
 
-        JPanel controlPanel = new JPanel(new BorderLayout(10, 10));
-        controlPanel.setBackground(CREAM);
-        controlPanel.setBorder(new EmptyBorder(15, 0, 0, 0));
+    private JPanel createControlsPanel() {
+        JPanel controls = new JPanel(new GridBagLayout());
+        controls.setBackground(WHITE);
+        controls.setBorder(new EmptyBorder(4, 14, 4, 4));
+        controls.setPreferredSize(new Dimension(CONTROLS_WIDTH, 0));
 
-        JPanel verticalControlPanel = new JPanel();
-        verticalControlPanel.setLayout(new BoxLayout(verticalControlPanel, BoxLayout.Y_AXIS));
-        verticalControlPanel.setBackground(CREAM);
-
-        JPanel digitLimitPanel = createControlPanel();
-        JLabel lblDigitLimit = new JLabel("Límite de dígitos:");
-        lblDigitLimit.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblDigitLimit.setForeground(VERY_DARK);
-
+        // ---------- Componentes ----------
         txtDigitLimit = createStyledTextField();
-        txtDigitLimit.setText("2"); // Valor por defecto
-
-        digitLimitPanel.add(lblDigitLimit);
-        digitLimitPanel.add(txtDigitLimit);
-
-        verticalControlPanel.add(digitLimitPanel);
-        verticalControlPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        JPanel generatePanel = createControlPanel();
-        JLabel lblArraySize = new JLabel("Tamaño del arreglo:");
-        lblArraySize.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblArraySize.setForeground(VERY_DARK);
+        txtDigitLimit.setText("2");
 
         txtArraySize = createStyledTextField();
-
-        btnGenerateArray = createStyledButton("Generar Arreglo", WARM_BROWN);
-
-        generatePanel.add(lblArraySize);
-        generatePanel.add(txtArraySize);
-        generatePanel.add(Box.createHorizontalStrut(10));
-        generatePanel.add(btnGenerateArray);
-
-        verticalControlPanel.add(generatePanel);
-        verticalControlPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        // Panel to load from file
-        JPanel loadFilePanel = createControlPanel();
-        JLabel lblLoadFile = new JLabel("Cargar datos desde archivo:");
-        lblLoadFile.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblLoadFile.setForeground(VERY_DARK);
-
-        btnLoadFromFile = createStyledButton("Seleccionar Archivo", WARM_BROWN);
-
-        loadFilePanel.add(lblLoadFile);
-        loadFilePanel.add(Box.createHorizontalStrut(10));
-        loadFilePanel.add(btnLoadFromFile);
-
-        verticalControlPanel.add(loadFilePanel);
-        verticalControlPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        // Panel to insert value
-        JPanel insertPanel = createControlPanel();
-        JLabel lblInsert = new JLabel("Insertar una clave:");
-        lblInsert.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblInsert.setForeground(VERY_DARK);
-
         txtInsertValue = createStyledTextField();
-
-        btnInsertValue = createStyledButton("Insertar", LIGHT_BROWN);
-
-        insertPanel.add(lblInsert);
-        insertPanel.add(txtInsertValue);
-        insertPanel.add(Box.createHorizontalStrut(10));
-        insertPanel.add(btnInsertValue);
-
-        verticalControlPanel.add(insertPanel);
-        verticalControlPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        // Panel to search value
-        JPanel searchPanel = createControlPanel();
-        JLabel lblSearch = new JLabel("Clave a buscar:");
-        lblSearch.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblSearch.setForeground(VERY_DARK);
-
         txtValueToSearch = createStyledTextField();
-
-        btnSearch = createStyledButton("Buscar", DARK_NAVY);
-
-        searchPanel.add(lblSearch);
-        searchPanel.add(txtValueToSearch);
-        searchPanel.add(Box.createHorizontalStrut(10));
-        searchPanel.add(btnSearch);
-
-        verticalControlPanel.add(searchPanel);
-        verticalControlPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        // Panel for visualization checkbox
-        JPanel visualizationPanel = createControlPanel();
-        chkVisualizeProcess = new JCheckBox("Visualizar proceso de búsqueda");
-        chkVisualizeProcess.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        chkVisualizeProcess.setBackground(CREAM);
-        chkVisualizeProcess.setForeground(VERY_DARK);
-        chkVisualizeProcess.setSelected(true); // Por defecto activado
-        chkVisualizeProcess.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        visualizationPanel.add(chkVisualizeProcess);
-
-        verticalControlPanel.add(visualizationPanel);
-        verticalControlPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        // Panel to delete value
-        JPanel deletePanel = createControlPanel();
-        JLabel lblDelete = new JLabel("Eliminar una clave:");
-        lblDelete.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        lblDelete.setForeground(VERY_DARK);
-
         txtValueToDelete = createStyledTextField();
 
-        btnDeleteValue = createStyledButton("Eliminar", new Color(180, 67, 67)); // Rojo más suave
+        btnGenerateArray = createStyledButton("Generar Arreglo", MUSTARD);
+        btnLoadFromFile = createStyledButton("Seleccionar Arc...", MUSTARD);
+        btnInsertValue = createStyledButton("Insertar", BRICK_RED);
+        btnSearch = createStyledButton("Buscar", NAVY_HEADER);
+        btnDeleteValue = createStyledButton("Eliminar", BRICK_RED);
+        btnBack = createStyledButton("Volver", DARK_GRAY);
 
-        deletePanel.add(lblDelete);
-        deletePanel.add(txtValueToDelete);
-        deletePanel.add(Box.createHorizontalStrut(10));
-        deletePanel.add(btnDeleteValue);
+        chkVisualizeProcess = new JCheckBox("Visualizar proceso de búsqueda");
+        chkVisualizeProcess.setFont(FONT_LABEL);
+        chkVisualizeProcess.setBackground(WHITE);
+        chkVisualizeProcess.setForeground(TEXT_DARK);
+        chkVisualizeProcess.setFocusPainted(false);
+        chkVisualizeProcess.setSelected(true);
+        chkVisualizeProcess.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        verticalControlPanel.add(deletePanel);
-        verticalControlPanel.add(Box.createRigidArea(new Dimension(0, 15)));
-
-        // Result label
-        lblResult = new JLabel("");
-        lblResult.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        lblResult = new JLabel(" ");
+        lblResult.setFont(new Font("Segoe UI", Font.BOLD, 12));
         lblResult.setHorizontalAlignment(SwingConstants.CENTER);
-        lblResult.setBorder(new EmptyBorder(10, 0, 10, 0));
 
-        JPanel resultPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        resultPanel.setBackground(CREAM);
-        resultPanel.add(lblResult);
+        // ---------- Distribución con GridBagLayout ----------
+        int row = 0;
+        row = addControlRow(controls, row, "Límite de dígitos:", txtDigitLimit, null);
+        row = addControlRow(controls, row, "Tamaño del arreglo:", txtArraySize, btnGenerateArray);
+        row = addControlRow(controls, row, "Cargar datos desde archivo:", null, btnLoadFromFile);
+        row = addControlRow(controls, row, "Insertar una clave:", txtInsertValue, btnInsertValue);
+        row = addControlRow(controls, row, "Clave a buscar:", txtValueToSearch, btnSearch);
 
-        verticalControlPanel.add(resultPanel);
-        verticalControlPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+        // Checkbox alineado a la derecha, ocupando las tres columnas
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        gbc.gridwidth = 3;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(6, 6, 6, 6);
+        JPanel checkWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        checkWrapper.setBackground(WHITE);
+        checkWrapper.add(chkVisualizeProcess);
+        controls.add(checkWrapper, gbc);
 
-        // Button panel for back button
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.setBackground(CREAM);
+        row = addControlRow(controls, row, "Eliminar una clave:", txtValueToDelete, btnDeleteValue);
 
-        btnBack = createStyledButton("Volver", VERY_DARK);
-        buttonPanel.add(btnBack);
+        // Etiqueta de resultados
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        gbc.gridwidth = 3;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(6, 6, 6, 6);
+        controls.add(lblResult, gbc);
 
-        verticalControlPanel.add(buttonPanel);
+        // Espacio flexible: empuja el botón Volver al fondo sin deformar el resto
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        gbc.gridwidth = 3;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        JPanel glue = new JPanel();
+        glue.setOpaque(false);
+        controls.add(glue, gbc);
 
-        controlPanel.add(verticalControlPanel, BorderLayout.CENTER);
-        centerPanel.add(controlPanel, BorderLayout.SOUTH);
+        // Botón Volver (columna de botones)
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = row;
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(6, 6, 6, 6);
+        controls.add(btnBack, gbc);
 
-        add(centerPanel, BorderLayout.CENTER);
+        return controls;
+    }
 
-        // Bottom panel with information
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setBackground(LIGHT_BROWN);
-        bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+    /**
+     * Agrega una fila "etiqueta | campo | botón". Cualquiera de los dos últimos
+     * puede ser null (por ejemplo, "Límite de dígitos" no tiene botón).
+     */
+    private int addControlRow(JPanel panel, int row, String labelText,
+                              JComponent input, JButton button) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridy = row;
+        gbc.insets = new Insets(6, 6, 6, 6);
 
-        JLabel lblInfo = new JLabel("© 2025 - Search Algorithms v1.0");
+        // Columna 0: etiqueta
+        gbc.gridx = 0;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.EAST;
+        JLabel label = new JLabel(labelText);
+        label.setFont(FONT_LABEL);
+        label.setForeground(TEXT_DARK);
+        panel.add(label, gbc);
+
+        // Columna 1: campo de texto (o espaciador si no aplica)
+        gbc.gridx = 1;
+        gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        if (input != null) {
+            panel.add(input, gbc);
+        } else {
+            JPanel spacer = new JPanel();
+            spacer.setOpaque(false);
+            panel.add(spacer, gbc);
+        }
+
+        // Columna 2: botón de acción (o espacio vacío)
+        gbc.gridx = 2;
+        gbc.weightx = 0;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.EAST;
+        if (button != null) {
+            panel.add(button, gbc);
+        } else {
+            JPanel spacer = new JPanel();
+            spacer.setOpaque(false);
+            spacer.setPreferredSize(new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT));
+            panel.add(spacer, gbc);
+        }
+
+        return row + 1;
+    }
+
+    // ===================== Pie de página =====================
+    private JPanel createFooterPanel() {
+        JPanel footer = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 8));
+        footer.setBackground(BRICK_RED);
+
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        lblInfo.setForeground(SOFT_WHITE);
+        lblInfo.setForeground(WHITE);
 
-        bottomPanel.add(lblInfo);
-        add(bottomPanel, BorderLayout.SOUTH);
+        footer.add(lblInfo);
+        return footer;
     }
 
-    private JPanel createControlPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 5));
-        panel.setBackground(CREAM);
-        return panel;
-    }
-
-    // Method to create a styled text field
+    // ===================== Fábricas de componentes =====================
     private JTextField createStyledTextField() {
         JTextField textField = new JTextField(10);
-        textField.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        textField.setBackground(SOFT_WHITE);
-        textField.setForeground(VERY_DARK);
+        textField.setFont(FONT_FIELD);
+        textField.setBackground(WHITE);
+        textField.setForeground(TEXT_DARK);
+        textField.setCaretColor(TEXT_DARK);
+        textField.setPreferredSize(new Dimension(120, 32));
+        textField.setMinimumSize(new Dimension(90, 32));
         textField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(LIGHT_BROWN, 1),
-                BorderFactory.createEmptyBorder(5, 8, 5, 8)
+                BorderFactory.createLineBorder(BRICK_RED, 1),
+                new EmptyBorder(4, 8, 4, 8)
         ));
         return textField;
     }
 
-    // Method to create a styled button
     private JButton createStyledButton(String text, Color backgroundColor) {
+        final Color base = backgroundColor;
         JButton button = new JButton(text);
-        button.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        button.setBackground(backgroundColor);
-        button.setForeground(SOFT_WHITE);
+        // BasicButtonUI garantiza que el color de fondo de la paleta se pinte
+        // igual sin importar el Look & Feel del sistema operativo.
+        button.setUI(new BasicButtonUI());
+        button.setFont(FONT_BUTTON);
+        button.setBackground(base);
+        button.setForeground(WHITE);
+        button.setOpaque(true);
+        button.setContentAreaFilled(true);
         button.setFocusPainted(false);
-        button.setBorderPainted(false);
+        button.setBorder(new EmptyBorder(8, 12, 8, 12));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setPreferredSize(new Dimension(150, 35));
 
-        // Efecto hover
-        button.addMouseListener(new java.awt.event.MouseAdapter() {
-            Color originalColor = backgroundColor;
+        Dimension size = new Dimension(BUTTON_WIDTH, BUTTON_HEIGHT);
+        button.setPreferredSize(size);
+        button.setMinimumSize(size);
+        button.setMaximumSize(size);
 
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setBackground(originalColor.brighter());
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setBackground(brighten(base, 22));
             }
 
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setBackground(originalColor);
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setBackground(base);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                button.setBackground(darken(base, 22));
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                button.setBackground(brighten(base, 22));
             }
         });
 
         return button;
     }
 
-    // Methods to assign external actions to buttons
+    private Color brighten(Color color, int amount) {
+        return new Color(
+                Math.min(255, color.getRed() + amount),
+                Math.min(255, color.getGreen() + amount),
+                Math.min(255, color.getBlue() + amount)
+        );
+    }
+
+    private Color darken(Color color, int amount) {
+        return new Color(
+                Math.max(0, color.getRed() - amount),
+                Math.max(0, color.getGreen() - amount),
+                Math.max(0, color.getBlue() - amount)
+        );
+    }
+
+    // ===================== Acciones (usadas por el controlador) =====================
     public void addGenerateArrayListener(ActionListener listener) {
         btnGenerateArray.addActionListener(listener);
     }
@@ -354,45 +457,42 @@ public class SequentialSearchView extends JFrame {
     }
 
     public void addClearArrayListener(ActionListener listener) {
-        btnClearArray.addActionListener(listener);
+        if (btnClearArray != null) {
+            btnClearArray.addActionListener(listener);
+        }
     }
 
     public void addBackListener(ActionListener listener) {
         btnBack.addActionListener(listener);
     }
 
-    // Method to get search value
+    // ===================== Getters =====================
     public String getSearchValue() {
         return txtValueToSearch.getText().trim();
     }
 
-    // Method to get array size value
     public String getArraySize() {
         return txtArraySize.getText().trim();
     }
 
-    // Method to get insert value
     public String getInsertValue() {
         return txtInsertValue.getText().trim();
     }
 
-    // Method to get delete value
     public String getDeleteValue() {
         return txtValueToDelete.getText().trim();
     }
 
-    // Method to get digit limit
     public String getDigitLimit() {
         return txtDigitLimit.getText().trim();
     }
 
-    // Method to display search result
     public void setResultMessage(String message, boolean isSuccess) {
         lblResult.setText(message);
-        lblResult.setForeground(isSuccess ? new Color(76, 175, 80) : new Color(183, 28, 28));
+        lblResult.setForeground(isSuccess ? new Color(46, 125, 50) : new Color(183, 28, 28));
     }
 
-    // Method to populate the table with values
+    // ===================== Tabla =====================
     public void setTableData(Object[][] data) {
         tableModel.setRowCount(0);
         for (Object[] row : data) {
@@ -400,7 +500,6 @@ public class SequentialSearchView extends JFrame {
         }
     }
 
-    // Method to highlight a specific row in the table
     public void highlightRow(int rowIndex) {
         if (rowIndex >= 0 && rowIndex < dataTable.getRowCount()) {
             dataTable.setRowSelectionInterval(rowIndex, rowIndex);
@@ -408,7 +507,6 @@ public class SequentialSearchView extends JFrame {
         }
     }
 
-    // Method to highlight search progress
     public void highlightSearchProgress(int rowIndex) {
         currentSearchIndex = rowIndex;
         foundIndex = -1;
@@ -419,7 +517,6 @@ public class SequentialSearchView extends JFrame {
         }
     }
 
-    // Method to highlight found item
     public void highlightFoundItem(int rowIndex) {
         currentSearchIndex = -1;
         foundIndex = rowIndex;
@@ -430,19 +527,16 @@ public class SequentialSearchView extends JFrame {
         }
     }
 
-    // Method to clear highlights
     public void clearHighlights() {
         currentSearchIndex = -1;
         foundIndex = -1;
         dataTable.repaint();
     }
 
-    // Method to check if visualization is enabled
     public boolean isVisualizationEnabled() {
         return chkVisualizeProcess.isSelected();
     }
 
-    // Method to show the window
     public void showWindow() {
         setVisible(true);
     }

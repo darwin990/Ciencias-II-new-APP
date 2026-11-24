@@ -129,9 +129,11 @@ java -jar search_algorithms.jar
 - Residue tree and multiple residue tree show how data can be organized based on remainders.
 - Huffman tree demonstrates data compression techniques.
 
-## Author
+## Autor
 
-Grupo 1
+Nestor Morales - 20212020065
+Santiago Pineda - 20222020055
+2026 grupo 2
 
 ## License
 

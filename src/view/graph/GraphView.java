@@ -1,5 +1,7 @@
 package view.graph;
 
+import view.ThemedFrame;
+
 import model.graph.GraphModel;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -8,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class GraphView extends JFrame {
+public class GraphView extends ThemedFrame {
 
     private JButton btnCreateGraph;
     private JButton btnAnalyzeGraph;
@@ -130,11 +132,11 @@ public class GraphView extends JFrame {
         mainPanel.setBackground(CREAM);
         mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        // Panel izquierdo - Controles de entrada
+        // Panel derecho - Controles de entrada
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setBackground(CREAM);
-        leftPanel.setPreferredSize(new Dimension(350, 0));
+        leftPanel.setPreferredSize(new Dimension(430, 0));
 
         // Panel de entrada de vértices
         JPanel verticesPanel = createSectionPanel("Vértices");
@@ -201,9 +203,7 @@ public class GraphView extends JFrame {
         backPanel.add(btnBack);
         leftPanel.add(backPanel);
 
-        mainPanel.add(leftPanel, BorderLayout.WEST);
-
-        // Panel derecho - Visualización y matrices
+        // Visualizador de datos (izquierda / expansión prioritaria)
         JPanel rightPanel = new JPanel(new BorderLayout(10, 10));
         rightPanel.setBackground(CREAM);
 
@@ -246,6 +246,7 @@ public class GraphView extends JFrame {
 
         rightPanel.add(tabbedPane, BorderLayout.CENTER);
         mainPanel.add(rightPanel, BorderLayout.CENTER);
+        mainPanel.add(leftPanel, BorderLayout.EAST);
 
         add(mainPanel, BorderLayout.CENTER);
 
@@ -254,7 +255,7 @@ public class GraphView extends JFrame {
         bottomPanel.setBackground(LIGHT_BROWN);
         bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JLabel lblInfo = new JLabel("© 2025 - Graph Analysis & Visualization System v2.0");
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblInfo.setForeground(SOFT_WHITE);
 

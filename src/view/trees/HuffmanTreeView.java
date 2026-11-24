@@ -1,5 +1,7 @@
 package view.trees;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -8,7 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
-public class HuffmanTreeView extends JFrame {
+public class HuffmanTreeView extends ThemedFrame {
 
     public interface TreeVisualizer {
         void paintTreeVisualization(Graphics2D g2d, int width, int height);

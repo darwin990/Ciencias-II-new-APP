@@ -1,11 +1,13 @@
 package view.menu;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class MainView extends JFrame {
+public class MainView extends ThemedFrame {
     private JButton btnInternalSearch;
     private JButton btnExternalSearch;
     private JButton btnIndices;
@@ -13,7 +15,7 @@ public class MainView extends JFrame {
 
     public MainView() {
         // Window configuration
-        setTitle("Search Algorithms");
+        setTitle("Search Algorithms - 2026 grupo 2");
         setSize(700, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -114,7 +116,7 @@ public class MainView extends JFrame {
         bottomPanel.setBackground(new Color(245, 240, 235));
         bottomPanel.setBorder(new EmptyBorder(12, 10, 12, 10));
 
-        JLabel lblInfo = new JLabel("© 2025 - Search Algorithms v1.0 Grupo 1");
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblInfo.setForeground(new Color(39, 89, 80));
 

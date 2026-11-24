@@ -1,11 +1,13 @@
 package view.external_search;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.List;
 
-public class HashExpansionView extends JFrame {
+public class HashExpansionView extends ThemedFrame {
     private JTextField campoClave;
     private JButton btnInsertar, btnEliminar, btnVolver;
     private JTextArea areaProcedimiento;
@@ -50,11 +52,12 @@ public class HashExpansionView extends JFrame {
         titulo.setFont(new Font("Segoe UI", Font.BOLD, 24));
         titulo.setForeground(COLOR_ENCABEZADO);
         titulo.setBorder(new EmptyBorder(0, 0, 20, 0));
-        panelPrincipal.add(titulo, BorderLayout.NORTH);
-        
-        // Panel de controles
+
+        // Panel de controles (derecha)
         JPanel panelControles = crearPanelControles();
-        panelPrincipal.add(panelControles, BorderLayout.NORTH);
+        JPanel contenedorControles = new JPanel(new BorderLayout());
+        contenedorControles.add(panelControles, BorderLayout.NORTH);
+        contenedorControles.setPreferredSize(new Dimension(380, 0));
         
         // Panel central para la tabla
         JPanel panelCentral = new JPanel(new BorderLayout(10, 10));
@@ -87,6 +90,8 @@ public class HashExpansionView extends JFrame {
         JPanel panelProcedimientos = crearPanelProcedimientos();
         panelPrincipal.add(panelProcedimientos, BorderLayout.SOUTH);
         
+        panelPrincipal.add(contenedorControles, BorderLayout.EAST);
+        
         add(panelPrincipal, BorderLayout.CENTER);
     }
     
@@ -94,10 +99,10 @@ public class HashExpansionView extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(COLOR_FONDO);
-        panel.setBorder(new EmptyBorder(0, 0, 20, 0));
+        panel.setBorder(new EmptyBorder(10, 16, 10, 8));
         
         // Primera fila: Campo de clave
-        JPanel filaClave = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        JPanel filaClave = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 8));
         filaClave.setBackground(COLOR_FONDO);
         
         JLabel lblClave = new JLabel("Clave (2 dígitos):");
@@ -116,8 +121,8 @@ public class HashExpansionView extends JFrame {
         filaClave.add(lblClave);
         filaClave.add(campoClave);
         
-        // Segunda fila: Botones
-        JPanel filaBotones = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        // Segunda fila: Botones apilados
+        JPanel filaBotones = new JPanel(new GridLayout(3, 1, 0, 10));
         filaBotones.setBackground(COLOR_FONDO);
         
         btnInsertar = crearBoton("Insertar Clave", COLOR_BOTON_PRINCIPAL);
@@ -128,7 +133,10 @@ public class HashExpansionView extends JFrame {
         filaBotones.add(btnEliminar);
         filaBotones.add(btnVolver);
         
+        filaClave.setAlignmentX(Component.LEFT_ALIGNMENT);
+        filaBotones.setAlignmentX(Component.LEFT_ALIGNMENT);
         panel.add(filaClave);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
         panel.add(filaBotones);
         
         return panel;

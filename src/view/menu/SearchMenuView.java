@@ -1,11 +1,13 @@
 package view.menu;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class SearchMenuView extends JFrame {
+public class SearchMenuView extends ThemedFrame {
 
     private JButton btnPartialSearch;
     private JButton btnTotalSearch;
@@ -118,7 +120,7 @@ public class SearchMenuView extends JFrame {
         bottomPanel.setBackground(new Color(245, 240, 235));
         bottomPanel.setBorder(new EmptyBorder(12, 10, 12, 10));
 
-        JLabel lblInfo = new JLabel("© 2025 - Search Algorithms v1.0 Grupo 1");
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblInfo.setForeground(new Color(39, 89, 80));
 

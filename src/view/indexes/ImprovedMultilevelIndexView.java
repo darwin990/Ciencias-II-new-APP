@@ -1,5 +1,8 @@
 package view.indexes;
 
+import view.Theme;
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -9,7 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImprovedMultilevelIndexView extends JFrame {
+public class ImprovedMultilevelIndexView extends ThemedFrame {
 
     private JButton btnSearch;
     private JButton btnConfigure;
@@ -103,7 +106,7 @@ public class ImprovedMultilevelIndexView extends JFrame {
 
         // Panel de controles en la parte derecha
         JPanel controlPanel = createControlPanel();
-        centerPanel.add(controlPanel, BorderLayout.EAST);
+        centerPanel.add(Theme.envolverControles(controlPanel), BorderLayout.EAST);
 
         add(centerPanel, BorderLayout.CENTER);
     }

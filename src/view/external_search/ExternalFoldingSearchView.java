@@ -1,5 +1,7 @@
 package view.external_search;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -7,7 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class ExternalFoldingSearchView extends JFrame {
+public class ExternalFoldingSearchView extends ThemedFrame {
 
     private JButton btnSearch;
     private JButton btnGenerateTable;
@@ -326,7 +328,7 @@ public class ExternalFoldingSearchView extends JFrame {
         bottomPanel.setBackground(new Color(220, 220, 220));
         bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JLabel lblInfo = new JLabel("© 2025 - External Hash Folding Algorithm v1.0");
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblInfo.setForeground(new Color(100, 100, 100));
 

@@ -1,5 +1,7 @@
 package view.external_search;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -7,7 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class ExternalBinarySearchView extends JFrame {
+public class ExternalBinarySearchView extends ThemedFrame {
 
     private JButton btnSearch;
     private JButton btnGenerateBlocks;
@@ -50,7 +52,7 @@ public class ExternalBinarySearchView extends JFrame {
     public ExternalBinarySearchView() {
         // Basic window configuration
         setTitle("Búsqueda Binaria Externa");
-        setSize(950, 1150);
+        setSize(950, 1650);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(15, 15));
@@ -377,7 +379,7 @@ public class ExternalBinarySearchView extends JFrame {
         bottomPanel.setBackground(LIGHT_BROWN);
         bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JLabel lblInfo = new JLabel("© 2025 - External Binary Search Algorithms v1.0");
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblInfo.setForeground(SOFT_WHITE);
 

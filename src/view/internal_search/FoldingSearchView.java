@@ -1,5 +1,7 @@
 package view.internal_search;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
@@ -7,7 +9,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class FoldingSearchView extends JFrame {
+public class FoldingSearchView extends ThemedFrame {
 
     private JButton btnSearch;
     private JButton btnGenerateArray;
@@ -280,7 +282,7 @@ public class FoldingSearchView extends JFrame {
         bottomPanel.setBackground(LIGHT_BROWN);
         bottomPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JLabel lblInfo = new JLabel("© 2025 - Search Algorithms v1.0");
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         lblInfo.setForeground(SOFT_WHITE);
 

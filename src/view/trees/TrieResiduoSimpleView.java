@@ -1,12 +1,14 @@
 package view.trees;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
-public class TrieResiduoSimpleView extends JFrame {
+public class TrieResiduoSimpleView extends ThemedFrame {
 
     public interface TreeVisualizer {
         void paintTreeVisualization(Graphics2D g2d, int width, int height);

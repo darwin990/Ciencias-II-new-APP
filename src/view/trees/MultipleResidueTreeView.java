@@ -1,5 +1,7 @@
 package view.trees;
 
+import view.ThemedFrame;
+
 import model.trees.MultipleResidueTreeModel.TreeNode;
 
 import javax.swing.*;
@@ -10,7 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-public class MultipleResidueTreeView extends JFrame {
+public class MultipleResidueTreeView extends ThemedFrame {
     // Paneles principales
     private JPanel mainPanel;
     private JPanel operationsPanel;
@@ -146,14 +148,19 @@ public class MultipleResidueTreeView extends JFrame {
     }
 
     private void layoutComponents() {
-        // Panel izquierdo para operaciones y tabla
-        JPanel leftPanel = new JPanel(new BorderLayout(0, 10));
-        leftPanel.add(operationsPanel, BorderLayout.NORTH);
-        leftPanel.add(tablePanel, BorderLayout.CENTER);
+        // Visualizador de datos (izquierda, con prioridad de expansión)
+        JPanel datosPanel = new JPanel(new BorderLayout(10, 10));
+        datosPanel.add(treeVisualizationPanel, BorderLayout.CENTER);
+        datosPanel.add(tablePanel, BorderLayout.SOUTH);
+        tablePanel.setPreferredSize(new Dimension(0, 220));
 
-        // Añadir todos los componentes al panel principal
-        mainPanel.add(leftPanel, BorderLayout.WEST);
-        mainPanel.add(treeVisualizationPanel, BorderLayout.CENTER);
+        // Controles (derecha)
+        JPanel controlesPanel = new JPanel(new BorderLayout());
+        controlesPanel.setPreferredSize(new Dimension(520, 0));
+        controlesPanel.add(operationsPanel, BorderLayout.NORTH);
+
+        mainPanel.add(datosPanel, BorderLayout.CENTER);
+        mainPanel.add(controlesPanel, BorderLayout.EAST);
         mainPanel.add(statusPanel, BorderLayout.SOUTH);
 
         // Añadir el panel principal al frame

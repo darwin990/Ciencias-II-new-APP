@@ -1,9 +1,11 @@
 package view.indexes;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import java.awt.*;
 
-public class SecondaryIndexView extends JFrame {
+public class SecondaryIndexView extends ThemedFrame {
     public JTextField txtRegistros = new JTextField(10);
     public JTextField txtBloque = new JTextField(10);
     public JTextField txtDato = new JTextField(10);
@@ -60,9 +62,19 @@ public class SecondaryIndexView extends JFrame {
         panelEstructura.setBackground(new Color(0xF2CA99));
         panelEstructura.setBorder(BorderFactory.createTitledBorder("Visualización de Estructura"));
 
-        add(panelEntrada, BorderLayout.NORTH);
-        add(scrollResultados, BorderLayout.CENTER);
-        add(panelEstructura, BorderLayout.SOUTH);
+        // Panel de datos (izquierda, con prioridad de expansión)
+        JPanel datosPanel = new JPanel(new BorderLayout(10, 10));
+        datosPanel.add(scrollResultados, BorderLayout.CENTER);
+        panelEstructura.setPreferredSize(new Dimension(0, 330));
+        datosPanel.add(panelEstructura, BorderLayout.SOUTH);
+
+        // Panel de controles (derecha)
+        JPanel controlesPanel = new JPanel(new BorderLayout());
+        controlesPanel.add(panelEntrada, BorderLayout.NORTH);
+        controlesPanel.setPreferredSize(new Dimension(430, 0));
+
+        add(datosPanel, BorderLayout.CENTER);
+        add(controlesPanel, BorderLayout.EAST);
 
         setSize(800, 700);
         setLocationRelativeTo(null);

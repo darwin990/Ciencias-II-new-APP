@@ -1,11 +1,13 @@
 package view.menu;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class TreeView extends JFrame {
+public class TreeView extends ThemedFrame {
 
     private JButton btnDigitalTree;
     private JButton btnWastedTree;
@@ -120,7 +122,7 @@ public class TreeView extends JFrame {
         bottomPanel.setBackground(FOOTER_COLOR);
         bottomPanel.setBorder(new EmptyBorder(12, 10, 12, 10));
 
-        JLabel lblInfo = new JLabel("© 2025 - Search Algorithms v1.0 Daniel Velandia 20191020140");
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblInfo.setForeground(new Color(39, 89, 80));
 

@@ -1,5 +1,7 @@
 package view.indexes;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -9,7 +11,7 @@ import java.awt.event.ActionListener;
  * Vista para el simulador de índice primario
  * Interfaz gráfica que permite configurar parámetros y visualizar resultados
  */
-public class PrimaryIndexView extends JFrame {
+public class PrimaryIndexView extends ThemedFrame {
 
     // Componentes de entrada
     private JTextField txtRegistros;
@@ -93,23 +95,29 @@ public class PrimaryIndexView extends JFrame {
         // Panel superior: título
         JPanel titlePanel = createTitlePanel();
 
-        // Panel de entrada
+        // Panel de parámetros
         JPanel inputPanel = createInputPanel();
 
         // Panel de resultados y simulación (usando JTabbedPane)
         JTabbedPane tabbedPane = createTabbedPane();
 
-        // Panel inferior: botones
+        // Panel de botones
         JPanel buttonPanel = createButtonPanel();
 
-        // Ensamblar layout
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(titlePanel, BorderLayout.NORTH);
-        topPanel.add(inputPanel, BorderLayout.CENTER);
+        // Laterales: parámetros + botones a la derecha
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        rightPanel.add(inputPanel);
+        rightPanel.add(Box.createRigidArea(new Dimension(0, 12)));
+        rightPanel.add(buttonPanel);
 
-        mainPanel.add(topPanel, BorderLayout.NORTH);
+        JPanel rightContainer = new JPanel(new BorderLayout());
+        rightContainer.add(rightPanel, BorderLayout.NORTH);
+        rightContainer.setPreferredSize(new Dimension(560, 0));
+
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
         mainPanel.add(tabbedPane, BorderLayout.CENTER);
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        mainPanel.add(rightContainer, BorderLayout.EAST);
 
         add(mainPanel);
     }
@@ -158,33 +166,29 @@ public class PrimaryIndexView extends JFrame {
         gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("Número de registros:"), gbc);
         gbc.gridx = 1;
+        txtRegistros.setToolTipText("Registros totales ordenados por clave primaria");
         panel.add(txtRegistros, gbc);
-        gbc.gridx = 2;
-        panel.add(new JLabel("(registros totales ordenados por clave primaria)"), gbc);
 
         // Fila 2: Tamaño del bloque
         gbc.gridx = 0; gbc.gridy = 1;
         panel.add(new JLabel("Tamaño del bloque:"), gbc);
         gbc.gridx = 1;
+        txtBloque.setToolTipText("Bytes por bloque de disco");
         panel.add(txtBloque, gbc);
-        gbc.gridx = 2;
-        panel.add(new JLabel("(bytes por bloque de disco)"), gbc);
 
         // Fila 3: Longitud del dato
         gbc.gridx = 0; gbc.gridy = 2;
         panel.add(new JLabel("Longitud del registro de datos:"), gbc);
         gbc.gridx = 1;
+        txtDato.setToolTipText("Bytes por registro completo");
         panel.add(txtDato, gbc);
-        gbc.gridx = 2;
-        panel.add(new JLabel("(bytes por registro completo)"), gbc);
 
         // Fila 4: Longitud del índice
         gbc.gridx = 0; gbc.gridy = 3;
         panel.add(new JLabel("Longitud de entrada de índice:"), gbc);
         gbc.gridx = 1;
+        txtIndice.setToolTipText("Clave + puntero al bloque");
         panel.add(txtIndice, gbc);
-        gbc.gridx = 2;
-        panel.add(new JLabel("(clave + puntero al bloque)"), gbc);
 
         return panel;
     }
@@ -274,7 +278,7 @@ public class PrimaryIndexView extends JFrame {
      * Crea el panel de botones
      */
     private JPanel createButtonPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 10));
+        JPanel panel = new JPanel(new GridLayout(2, 2, 10, 8));
         panel.setBackground(new Color(240, 248, 255));
 
         panel.add(btnCalcular);

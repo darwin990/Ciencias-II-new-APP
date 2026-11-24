@@ -1,18 +1,20 @@
 package view.menu;
 
+import view.ThemedFrame;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class WelcomeView extends JFrame {
+public class WelcomeView extends ThemedFrame {
     private JButton btnSearchAlgorithms;
     private JButton btnGraphs;
     private JButton btnExit;
 
     public WelcomeView() {
         // Window configuration
-        setTitle("Ciencias de la Computación 2");
+        setTitle("Ciencias de la Computación 2 - 2026 grupo 2");
         setSize(700, 500);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -116,7 +118,7 @@ public class WelcomeView extends JFrame {
         bottomPanel.setBackground(new Color(245, 240, 235));
         bottomPanel.setBorder(new EmptyBorder(12, 10, 12, 10));
 
-        JLabel lblInfo = new JLabel("© 2025 - Ciencias de la Computación 2 - Grupo 1");
+        JLabel lblInfo = new JLabel(view.Theme.CREDITOS);
         lblInfo.setFont(new Font("Segoe UI", Font.PLAIN, 11));
         lblInfo.setForeground(new Color(39, 89, 80));
 
